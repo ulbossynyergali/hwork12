@@ -1,0 +1,116 @@
+import random
+import time
+
+
+class VenueService:
+    def __init__(self):
+        self.booked_dates = [ "2025-03-10", "2025-03-12" ]
+
+    def is_available(self, date):
+        return date not in self.booked_dates
+
+    def check_availability(self, date):
+        print("\n[СИСТЕМА]: Доступность площадки проверяется...")
+        time.sleep(1)
+
+        if self.is_available(date):
+            print("[СИСТЕМА]: Площадка доступна!")
+            return True
+        else:
+            print("[СИСТЕМА]: Площадка недоступна. Предложить другую дату.")
+            return False
+
+
+class PaymentGateway:
+    def process(self, amount):
+        print("\n[ПЛАТЕЖНЫЙ ШЛЮЗ]: Обработка платежа...")
+        time.sleep(1)
+
+        # 70% шанс успешной оплаты
+        success = random.random() < 0.7
+        if success:
+            print("[ПЛАТЕЖНЫЙ ШЛЮЗ]: Платеж успешно выполнен!")
+            return True
+        else:
+            print("[ПЛАТЕЖНЫЙ ШЛЮЗ]: Ошибка! Платеж отклонён.")
+            return False
+
+
+class EventOrganizer:
+    def prepare_tasks(self):
+        print("\n[АДМИН]: Формирование списка задач...")
+        time.sleep(1)
+        tasks = ["Декорации", "Еда", "Звук", "Свет"]
+        print("[АДМИН]: Список задач готов:", tasks)
+        return tasks
+
+    def send_tasks_to_contractors(self, tasks):
+        print("\n[СИСТЕМА]: Уведомление подрядчиков о задачах...")
+        for task in tasks:
+            print(f"[ПОДРЯДЧИК]: Получена задача: {task}")
+            time.sleep(0.5)
+
+        print("[ПОДРЯДЧИКИ]: Все задачи получены!")
+
+    def contractors_confirm(self):
+        print("\n[ПОДРЯДЧИКИ]: Выполнение задач...")
+        time.sleep(1)
+        print("[ПОДРЯДЧИКИ]: Все задачи выполнены!")
+
+    def send_report(self):
+        print("[СИСТЕМА]: Отчёт отправлен администратору.")
+
+
+class FeedbackService:
+    def request_feedback(self):
+        print("\n[СИСТЕМА]: Отправка запроса клиенту на отзыв...")
+        time.sleep(1)
+        feedback = random.choice([
+            "Отличное мероприятие!",
+            "Все прошло хорошо.",
+            "Есть замечания по звуку.",
+        ])
+        print(f"[КЛИЕНТ]: Оставлен отзыв: {feedback}")
+        return feedback
+
+    def send_to_manager(self, feedback):
+        print("[СИСТЕМА]: Отзыв отправлен менеджеру.")
+
+
+def full_booking_process():
+    venue = VenueService()
+    payments = PaymentGateway()
+    organizer = EventOrganizer()
+    feedback_service = FeedbackService()
+
+    print("\nПРОЦЕСС БРОНИРОВАНИЯ МЕРОПРИЯТИЯ:")
+
+    date = "2025-03-10"
+    print(f"\n[КЛИЕНТ]: Хочу забронировать на дату: {date}")
+    available = venue.check_availability(date)
+
+    if not available:
+        return
+
+    print("\n[КЛИЕНТ]: Подтверждаю бронь!")
+    pay_result = payments.process(200000)
+
+    if not pay_result:
+        print("[СИСТЕМА]: Клиенту: повторите оплату позже.")
+        return
+
+    print("[СИСТЕМА]: Бронирование подтверждено! Уведомления отправлены.")
+
+    tasks = organizer.prepare_tasks()
+    organizer.send_tasks_to_contractors(tasks)
+    organizer.contractors_confirm()
+    organizer.send_report()
+
+    feedback = feedback_service.request_feedback()
+    feedback_service.send_to_manager(feedback)
+
+    print("\nПРОЦЕСС ЗАВЕРШЁН!")
+
+
+# Запуск процесса
+full_booking_process()
