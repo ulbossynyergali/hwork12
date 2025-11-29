@@ -1,0 +1,96 @@
+class Candidate:
+    def __init__(self, name):
+        self.name = name
+
+    def submit_application(self):
+        print(f"{self.name} подал(а) заявку.")
+
+    def attend_interview(self):
+        print(f"{self.name} проходит собеседование.")
+
+    def receive_offer(self):
+        print(f"{self.name} получил(а) оффер.")
+
+    def confirm_offer(self):
+        print(f"{self.name} подтвердил(а) оффер.")
+
+    def receive_rejection(self):
+        print(f"{self.name} получил(а) уведомление об отказе.")
+
+
+class Head:
+    def __init__(self, name):
+        self.name = name
+
+    def create_vacancy_request(self):
+        print(f"{self.name} создал(а) заявку на вакансию.")
+
+    def notify_revision(self):
+        print(f"{self.name} получил(а) уведомление о доработке заявки.")
+
+    def conduct_technical_interview(self):
+        print(f"{self.name} проводит техническое собеседование.")
+
+
+class HR:
+    def __init__(self, name):
+        self.name = name
+
+    def review_request(self, request_valid):
+        if request_valid:
+            print(f"{self.name} утверждает заявку.")
+            return True
+        else:
+            print(f"{self.name} отклоняет заявку.")
+            return False
+
+    def review_applications(self, applications):
+        approved = []
+        for candidate, valid in applications:
+            if valid:
+                print(f"{self.name} приглашает {candidate.name} на собеседование.")
+                approved.append(candidate)
+            else:
+                print(f"{self.name} отклоняет заявку {candidate.name}.")
+                candidate.receive_rejection()
+        return approved
+
+    def conduct_initial_interview(self, candidate):
+        print(f"{self.name} проводит первичное интервью {candidate.name}.")
+
+
+class System:
+    def add_employee(self, candidate):
+        print(f"{candidate.name} добавлен(а) в базу данных компании.")
+
+    def notify_it(self):
+        print("IT-отдел уведомлен о необходимости настройки рабочего места.")
+
+
+head = Head("Руководитель отдела")
+hr = HR("HR-менеджер")
+system = System()
+candidate1 = Candidate("Иван")
+candidate2 = Candidate("Мария")
+
+head.create_vacancy_request()
+if hr.review_request(request_valid=True):
+    # Этап отбора
+    candidate1.submit_application()
+    candidate2.submit_application()
+    approved_candidates = hr.review_applications([(candidate1, True), (candidate2, False)])
+
+    for cand in approved_candidates:
+        hr.conduct_initial_interview(cand)
+        head.conduct_technical_interview()
+        passed_interview = True
+        if passed_interview:
+            cand.receive_offer()
+            cand.confirm_offer()
+            system.add_employee(cand)
+            hr_name = hr.name
+            system.notify_it()
+        else:
+            cand.receive_rejection()
+else:
+    head.notify_revision()
